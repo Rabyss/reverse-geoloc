@@ -1,14 +1,11 @@
 FROM mongo
 
-RUN apt-get -qq update
-RUN apt-get install -y wget unzip
-
 #all these files can be found here: http://www.geonames.org/
-RUN wget http://download.geonames.org/export/dump/allCountries.zip && unzip allCountries.zip && rm allCountries.zip
+COPY data/admin1CodesASCII.txt admin1CodesASCII.txt
 
-RUN wget http://download.geonames.org/export/dump/admin1CodesASCII.txt
+COPY data/admin2Codes.txt admin2Codes.txt
 
-RUN wget http://download.geonames.org/export/dump/admin2Codes.txt
+COPY data/allCountries.txt allCountries.txt
 
 COPY ./mongo_script.js /mongo_script.js
 
