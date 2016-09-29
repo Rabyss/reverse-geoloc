@@ -1,28 +1,17 @@
 FROM mongo
 
-MAINTAINER Roger Küng <rogerkueng@gmail.com>
-
+RUN apt-get -qq update
+RUN apt-get install -y wget unzip
 
 #all these files can be found here: http://www.geonames.org/
+RUN wget http://download.geonames.org/export/dump/allCountries.zip && unzip allCountries.zip && rm allCountries.zip
 
-RUN echo 'we are copying the geonames data files'
+RUN wget http://download.geonames.org/export/dump/admin1CodesASCII.txt
 
-#get these files from http://download.geonames.org/export/dump/
-COPY ./data/allCountries.txt /allCountries.txt
-RUN echo 'Copied geolocation files'
-
-COPY ./data/admin1CodesASCII.txt /admin1CodesASCII.txt
-RUN echo 'Copied admin1 files'
-
-COPY ./data/admin2Codes.txt /admin2Codes.txt
-RUN echo 'Copied admin2 files'
+RUN wget http://download.geonames.org/export/dump/admin2Codes.txt
 
 COPY ./mongo_script.js /mongo_script.js
-RUN echo 'Copied mongo script'
 
 COPY ./mongo_imports.sh /mongo_imports.sh
-RUN echo 'Copied mongo import bash file'
-
 
 CMD ./mongo_imports.sh
-
