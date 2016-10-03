@@ -1,22 +1,21 @@
-
 db = db.getSiblingDB('reminisceme');
 
 db.getCollection('geolocations').drop();
-db.getCollection('geonames').aggregate( 
+db.getCollection('geonames').aggregate(
 [
-{ 
+{
   $match: {
     feature_class: "P"
   }
 },
 {
-  $project: { 
+  $project: {
       _id: 1,
       geonameid: 1,
       name: 1,
       loc: {
           type: {$literal: "Point" },
-          coordinates: [ "$longitude", "$latitude" ] 
+          coordinates: [ "$longitude", "$latitude" ]
       },
       asciiname: 1,
       alternatenames: 1,
@@ -36,7 +35,7 @@ db.getCollection('geonames').aggregate(
   }
   },
   { $out: "geolocations"}
-  ] 
+  ]
 );
 
 db.geolocations.ensureIndex({loc: "2dsphere"});
@@ -58,8 +57,11 @@ db.getCollection('geolocations').find({}).snapshot().forEach(function(el) {
     db.geolocations.save(el);
 });
 
-db.geolocations.createIndex({"canonical": 1, "population": -1})
-db.geolocations.createIndex({"loc" : "2dsphere" })
-db.getCollection('geolocations').createIndex({"feature_class": 1})
-db.admin1Codes.createIndex({"area_code": 1})
-
+db.geolocations.createIndex({"canonical": 1, "population": -1});
+print("Index canonical: OK")
+db.geolocations.createIndex({"loc" : "2dsphere" });
+print("Index loc: OK")
+db.getCollection('geolocations').createIndex({"feature_class": 1});
+print("Index feature_class: OK")
+db.admin1Codes.createIndex({"area_code": 1});
+print("Index admin1Codes: OK")

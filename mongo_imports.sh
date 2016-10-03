@@ -1,5 +1,9 @@
 #!/bin/bash
 
+if [ -a /misc/geoloc_done ]; then
+	echo "Done."
+	exit 0
+fi
 
 mongoimport --host mongo --db reminisceme --collection geonames --type tsv --drop --file ./allCountries.txt \
 --fields geonameid,name,asciiname,alternatenames,latitude,longitude,feature_class,\
@@ -13,3 +17,4 @@ mongoimport --host mongo --db reminisceme --collection admin2Codes  --type tsv -
 --fields area_code,name,alternative_name,number  --drop
 
 mongo --host mongo ./mongo_script.js
+touch /misc/geoloc_done
